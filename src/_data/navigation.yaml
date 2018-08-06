@@ -1,0 +1,30 @@
+logo:
+  text: DB CRUD
+  type: link
+  path: index.html
+
+main:
+- text: Python
+  type: link
+  path: python.html
+  children:
+  - text: MySQL
+    type: link
+    path: python_mysql.html
+  - text: MongoDB
+    type: link
+    path: python_mongodb.html
+  - text: HANA (PyHDB)
+    type: link
+    path: python_saphana.html
+
+- text: Go
+  type: link
+  path: golang.html
+  children:
+  - text: MySQL
+    type: link
+    path: golang_mysql.html
+  - text: MongoDB
+    type: link
+    path: golang_mongodb.html
