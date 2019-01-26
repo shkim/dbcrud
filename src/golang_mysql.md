@@ -26,19 +26,22 @@ import (
 
 var sqlDB *sqlx.DB
 
-connstr := "userid:passwd@tcp(example.mysqlsvr.com:3306)/dbname"
+connstr := "userid:passwd@tcp(example.mysqlsvr.com:3306)/dbname?charset=utf8mb4&collation=utf8mb4_unicode_ci"
 sqlDB, err = sqlx.Connect("mysql", connstr)
 if err != nil {
     log.Printf("MySQL connect failed: %v\n", err)
     return
 }
 
+sqlDB.MustExec("SET NAMES utf8mb4")
+
 // set timezone
 sqlDB.MustExec("SET time_zone = '+9:00'")
 
-// limit max connection
+// limit max connection (값을 줄여서 개발시에 에러를 경험해 보는 것이 좋다.)
 sqlDB.SetMaxOpenConns(12)
 ```
+텍스트에 Emoji가 사용된다면 연결시 charset=utf8mb4 관련 옵션을 설정해줘야 한다.
 
 ## Close
 ```go
