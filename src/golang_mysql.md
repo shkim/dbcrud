@@ -26,7 +26,7 @@ import (
 
 var sqlDB *sqlx.DB
 
-connstr := "userid:passwd@tcp(example.mysqlsvr.com:3306)/dbname?charset=utf8mb4&collation=utf8mb4_unicode_ci"
+connstr := "userid:passwd@tcp(example.mysqlsvr.com:3306)/dbname?parseTime=true&charset=utf8mb4&collation=utf8mb4_unicode_ci"
 sqlDB, err = sqlx.Connect("mysql", connstr)
 if err != nil {
     log.Printf("MySQL connect failed: %v\n", err)
@@ -41,7 +41,8 @@ sqlDB.MustExec("SET time_zone = '+9:00'")
 // limit max connection (값을 줄여서 개발시에 에러를 경험해 보는 것이 좋다.)
 sqlDB.SetMaxOpenConns(12)
 ```
-텍스트에 Emoji가 사용된다면 연결시 charset=utf8mb4 관련 옵션을 설정해줘야 한다.
+* parseTime=true 옵션을 줘야 Scan()시에 DATETIME 컬럼이 time.Time 타입으로 파싱이 된다.
+* 텍스트에 Emoji가 사용된다면 연결시 charset=utf8mb4 관련 옵션을 설정해줘야 한다.
 
 ## Close
 ```go
@@ -179,6 +180,7 @@ stmt, err := sqlDB.Prepare("INSERT INTO user(id, name) VALUES(?,?)")
 if err != nil {
     log.Fatal(err)
 }
+defer stmt.Close()
 
 res, err = stmt.Exec(id, name)
 if err != nil {
