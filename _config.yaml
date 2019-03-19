@@ -29,3 +29,8 @@ theme_config:
 ignore:
   # development only: ignore sub node_modules when `npm link hexo-theme-doc`
   - '**/node_modules/**/*node_modules'
+
+deploy:
+  type: git
+  repo: git@github.com:shkim/dbcrud.git
+  branch: gh-pages
