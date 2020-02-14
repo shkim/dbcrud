@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+
+    <title>DB CRUD | Python SAP HANA </title>
+    <meta name="description" content>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+
+    <!-- fonts -->
+    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Ubuntu:300,400,500,600,700" rel="stylesheet">
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="style/doc.css">
+
+    <!-- favicon -->
+    <link rel="icon" href="images/favicon.ico">
+
+    
+
+  </head>
+  <body>
+
+   <script>window.__INITIAL_STATE__ = {"page":{"title":"Python SAP HANA","path":"python_saphana.html"},"data":{"navigation":{"logo":{"text":"DB CRUD","type":"link","path":"index.html"},"main":[{"text":"Python","type":"link","path":"python.html","children":[{"text":"MySQL","type":"link","path":"python_mysql.html"},{"text":"MongoDB","type":"link","path":"python_mongodb.html"},{"text":"HANA (PyHDB)","type":"link","path":"python_saphana.html"}]},{"text":"Go","type":"link","path":"golang.html","children":[{"text":"MySQL","type":"link","path":"golang_mysql.html"},{"text":"MongoDB","type":"link","path":"golang_mongodb.html"}]}]}},"config":{"timezone":"Korea","root":"/dbcrud/","time_format":"HH:mm:ss","theme":"../node_modules/hexo-theme-doc","theme_config":{"swagger_ui":{"version":2,"permalinks":true,"api_explorer":true,"download":"Download specification","show_extensions":false,"deep_linking":true,"display_operation_id":false,"doc_expansion":"none"},"search":{"skip":false,"background":false,"route":"/lunr.json"},"favicon":"images/favicon.ico"}}}</script>
+
+    <div id="react-navigation-root"><div class="doc-navigation" data-reactroot><nav class="doc-navbar"><a href="/dbcrud/index.html" class="doc-navbar__logo"><img src="/dbcrud/images/logo.png" class="doc-navbar__logo__img"><span class="doc-navbar__logo__text">DB CRUD</span></a><i class="dc-icon dc-icon--close dc-icon--interactive doc-sidebar-close doc-navbar__sidebar-close doc-navbar__sidebar-close--desktop"></i><i class="dc-icon dc-icon--menu dc-icon--interactive doc-sidebar-toggle doc-navbar__sidebar-toggle"></i></nav><nav class="doc-sidebar"><div class="doc-sidebar__vertical-menu"><i class="dc-icon dc-icon--menu dc-icon--interactive doc-sidebar-toggle doc-sidebar-toggle--primary doc-sidebar__vertical-menu__item"></i><i class="dc-icon dc-icon--search dc-icon--interactive doc-sidebar__vertical-menu__item doc-sidebar__vertical-menu__item--primary"></i></div><div class="doc-sidebar-content"><div class="doc-sidebar__search-form"></div><ul class="doc-sidebar-list"></ul></div></nav></div></div>
+    <div class="doc-content">
+  <div class="dc-page">
+    <div class="dc-card">
+      <div id="react-search-results-root"></div>
+      <div id="page-content" class="doc-formatting">
+        <h1 id="Python-SAP-HANA-PyHDB"><a href="#Python-SAP-HANA-PyHDB" class="headerlink" title="Python - SAP HANA (PyHDB)"></a>Python - SAP HANA (PyHDB)</h1><hr>
+<h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><p><a href="https://github.com/SAP/PyHDB" target="_blank" rel="noopener">https://github.com/SAP/PyHDB</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip install pyhdb</span><br></pre></td></tr></table></figure>
+<h2 id="Connect"><a href="#Connect" class="headerlink" title="Connect"></a>Connect</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pyhdb</span><br><span class="line"></span><br><span class="line">connection = pyhdb.connect(</span><br><span class="line">    host=<span class="string">'myhana.example.com'</span>,</span><br><span class="line">    port=<span class="number">39015</span>,</span><br><span class="line">    user=<span class="string">'SYSTEM'</span>,</span><br><span class="line">    password=<span class="string">'12345'</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">cursor = connection.cursor()</span><br><span class="line">cursor.execute(<span class="string">'SET SCHEMA "%s"'</span> % (<span class="string">'myschema'</span>))</span><br><span class="line">cursor.close()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>SET SCHEMA ? (파라메터)는 안되는 것 같다.</li>
+<li>쌍따옴표를 붙여야 대소문자 구분이 된다.</li>
+</ul>
+<h2 id="Query"><a href="#Query" class="headerlink" title="Query"></a>Query</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">csr = connection.cursor()</span><br><span class="line">csr.execute(<span class="string">'SELECT ID, CODE,NAME FROM MYTABLE WHERE A=? AND B=?'</span>, [a, b])</span><br><span class="line">rows = csr.fetchall()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> row <span class="keyword">in</span> csr.fetchall():</span><br><span class="line">    data[row[<span class="number">0</span>]] = &#123; <span class="string">'code'</span>: row[<span class="number">1</span>], <span class="string">'name'</span>: row[<span class="number">2</span>] &#125;</span><br><span class="line"></span><br><span class="line">csr.close()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>파라메터 전달은 [] 및 () 가능</li>
+<li>pyhdb 는 필드명으로 컬럼을 찾는 기능이 지원되지 않는 것 같다. 인덱스 잘 세어서…</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">two_rows = csr.fetchmany(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>fetchall 과 비슷, 행 갯수를 지정할 수 있다.</li>
+<li>또 fetch* 를 호출하면 다음 행을 얻을 수 있다.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">row1 = csr.fetchone()   <span class="comment"># 1 row SELECT 할때</span></span><br><span class="line">maybe_none = csr.fetchone() <span class="comment"># 다음 행이 없다면 None 을 리턴한다.</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(row[<span class="number">0</span>].strftime(<span class="string">"%A %d. %B %Y"</span>))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>컬럼 데이터 타입이 datetime 이면 자동으로 python datetime 오브젝트로 변경되어, datetime 메소드를 사용할 수 있다.</li>
+</ul>
+<h2 id="Modify"><a href="#Modify" class="headerlink" title="Modify"></a>Modify</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cursor.execute(<span class="string">'INSERT INTO PYHDB_TEST(NAMES) VALUES(?)'</span>, [<span class="string">'hello'</span>])</span><br><span class="line">print(cursor.rowcount) <span class="comment"># 1</span></span><br><span class="line">connection.commit()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>기본적으로 auto commit 모드가 아니라서 commit() 을 호출해줘야 반영된다.</li>
+<li>HANA 는 cursor.lastrowid 가 지원되지 않는다. 😱</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cursor.executemany(<span class="string">'INSERT INTO PYHDB_TEST(NAMES) VALUES(?)'</span>, [ [<span class="string">'1'</span>],[<span class="string">'2'</span>],[<span class="string">'3'</span>],[<span class="string">'4'</span>],[<span class="string">'5'</span>] ])</span><br><span class="line">print(cursor.rowcount) <span class="comment"># 1?</span></span><br><span class="line">connection.commit()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>여러개 insert 는 가능하지만 cursor.rowcount 는 1이 리턴되더라.. 😱</li>
+</ul>
+<h2 id="LOB"><a href="#LOB" class="headerlink" title="LOB"></a>LOB</h2><p>TODO</p>
+<h2 id="Stored-Procedure"><a href="#Stored-Procedure" class="headerlink" title="Stored Procedure"></a>Stored Procedure</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cursor.execute(<span class="string">'CALL MY_PROC1(?,?)'</span>, [a, b])</span><br></pre></td></tr></table></figure>
+<ul>
+<li>기본적인 호출은 그냥 위와 같이 하면 되지만..</li>
+<li>pyhdb로 stored procedure 의 output parameter 를 받는 방법을 못찾겠다. (검색해서 나오는 것은 에러남)</li>
+<li>SP가 필요하다면 hdbcli 를 쓰는 것이 좋겠다.</li>
+</ul>
+
+        <div id="react-support-footer-root"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+
+    
+
+    <!-- js vendors -->
+    <script src="//code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lunr.js/2.1.0/lunr.min.js"></script>
+
+    <!-- js source  -->
+    <script src="script/doc.js"></script>
+
+    
+
+  </body>
+</html>
