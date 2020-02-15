@@ -21,7 +21,7 @@ StructScan 메소드를 쓰려면 끝에 x로 끝나는 메소드를 써야 한�
 ```go
 import (
     _ "github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
+    "github.com/jmoiron/sqlx"
 )
 
 var sqlDB *sqlx.DB
